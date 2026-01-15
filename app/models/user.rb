@@ -1,10 +1,10 @@
 class User < ApplicationRecord
-  has_many :posts, foreign_key: 'created_by', dependent: :destroy
+  has_many :posts, foreign_key: 'created_by_id', dependent: :destroy, inverse_of: :created_by
 
   validates :username, :first_name, presence: true
   validates :email, presence: true
 
-  after_create :send_welcome_email
+  # after_create :send_welcome_email
   after_create :create_welcome_post
 
   def send_welcome_email

@@ -51,7 +51,12 @@ module Api
       end
 
       def post_params
-        params.require(:post).permit(:title, :content, :created_by_id)
+        params.require(:post).permit(:title, :content, :created_by_id,
+          custom_field_values_attributes: [:id, :custom_field_id, :value, :_destroy]).tap do |permitted|
+            permitted[:custom_field_values_attributes].each do |attrs|
+              attrs[:type] = attrs[:custom_field_id].constantize.type
+            end
+          end
       end
   end
 end
