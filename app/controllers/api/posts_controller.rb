@@ -1,13 +1,13 @@
 module Api
   class PostsController < ApplicationController
-    before_action :set_post, only: [:show, :update, :destroy]
+    before_action :set_post, only: [ :show, :update, :destroy ]
 
     # GET /api/posts
     def index
       @posts = Post.all
 
       if params[:query].present?
-        @posts = @posts.where("title ILIKE '%#{params[:query]}%' OR content ILIKE '%#{params[:query]}%'")
+        @posts = @posts.where("title ILIKE ? OR content ILIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
       end
 
       render json: Api::PostPresenter.new(@posts).as_json
@@ -51,7 +51,18 @@ module Api
       end
 
       def post_params
-        params.require(:post).permit(:title, :content, :created_by_id)
+        params.require(:post).permit(
+          :title, :content, :created_by_id,
+          custom_field_values_attributes: [ :id, :custom_field_id, :value, :_destroy ]
+        ).tap do |permitted|
+          if permitted[:custom_field_values_attributes].present?
+            permitted[:custom_field_values_attributes].each do |attrs|
+              next if attrs[:custom_field_id].blank?
+              custom_field = CustomField.find(attrs[:custom_field_id])
+              attrs[:type] = custom_field.type.gsub("CustomField", "CustomFieldValue")
+            end
+          end
+        end
       end
   end
 end

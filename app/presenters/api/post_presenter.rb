@@ -1,6 +1,5 @@
 module Api
   class PostPresenter
-
     def initialize(post)
       @post = post
     end
@@ -20,10 +19,10 @@ module Api
           id: post.created_by.id,
           author: {
             id: post.created_by.id,
-            name: post.created_by.username,
+            name: post.created_by.username
           },
           title: post.title,
-          content: post.content,
+          content: post.content
         }
       end
   end

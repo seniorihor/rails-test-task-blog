@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :posts, foreign_key: 'created_by', dependent: :destroy
+  has_many :posts, foreign_key: "created_by_id", dependent: :destroy, inverse_of: :created_by
 
   validates :username, :first_name, presence: true
   validates :email, presence: true
