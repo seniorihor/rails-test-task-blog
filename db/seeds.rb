@@ -14,14 +14,14 @@ john = User.create!(
   username: "johndoe",
   first_name: "John",
   last_name: "Doe",
-  email: "john@example.com"
+  email: "john.doe@gmail.com"
 )
 
 jan = User.create!(
   username: "Kowalski",
   first_name: "Jan",
   last_name: "Kowalski",
-  email: "jan@example.com"
+  email: "jan@kowalski.com"
 )
 
 post = Post.create!(

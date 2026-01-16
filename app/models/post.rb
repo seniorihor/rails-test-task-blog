@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  belongs_to :created_by, class_name: 'User', inverse_of: :posts
+  belongs_to :created_by, class_name: "User", inverse_of: :posts
 
   has_many :custom_field_values, dependent: :destroy, inverse_of: :post
 

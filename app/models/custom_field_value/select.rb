@@ -3,7 +3,7 @@ class CustomFieldValue::Select < CustomFieldValue
   validates :value,
     length: { maximum: 1 },
     inclusion: {
-      in: ->(record) { record.custom_field.options },
+      in: ->(record) { record.options },
       allow_blank: true
     }
 end

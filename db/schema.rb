@@ -10,14 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_14_200730) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_16_161035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "pgcrypto"
+  enable_extension "pg_trgm"
 
   create_table "custom_field_values", force: :cascade do |t|
     t.bigint "post_id", null: false
     t.bigint "custom_field_id", null: false
+    t.string "type", null: false
     t.json "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -37,9 +38,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_14_200730) do
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "content"
-    t.integer "created_by"
+    t.bigint "created_by_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["content"], name: "index_posts_on_content", opclass: :gist_trgm_ops, using: :gist
+    t.index ["created_by_id"], name: "index_posts_on_created_by_id"
+    t.index ["title"], name: "index_posts_on_title", opclass: :gist_trgm_ops, using: :gist
   end
 
   create_table "users", force: :cascade do |t|
@@ -53,4 +57,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_14_200730) do
 
   add_foreign_key "custom_field_values", "custom_fields"
   add_foreign_key "custom_field_values", "posts"
+  add_foreign_key "posts", "users", column: "created_by_id"
 end
